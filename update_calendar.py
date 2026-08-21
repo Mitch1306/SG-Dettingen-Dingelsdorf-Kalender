@@ -25,7 +25,10 @@ def get_games():
         }
     )
 
-    with urllib.request.urlopen(request, timeout=30) as response:
+    with urllib.request.urlopen(
+        request,
+        timeout=30
+    ) as response:
         html = response.read().decode(
             "utf-8",
             errors="replace"
@@ -37,20 +40,36 @@ def get_games():
     )
 
     games = []
+    seen_ids = set()
+    seen_fallback = set()
 
     rows = soup.select(
         "div.club-matchplan-table tr.row-competition"
     )
 
     for row in rows:
+
         text = row.get_text(
             " ",
             strip=True
         )
 
+        # Nur Meisterschaftsspiele
         if "ME" not in text:
             continue
 
+        # Spiel-ID suchen
+        number_match = re.search(
+            r"\b(\d{9})\b",
+            text
+        )
+
+        match_id = None
+
+        if number_match:
+            match_id = number_match.group(1)
+
+        # Datum suchen
         date_match = re.search(
             r"(\d{2}\.\d{2}\.\d{2,4})",
             text
@@ -69,14 +88,21 @@ def get_games():
         if year < 100:
             year += 2000
 
+        # Uhrzeit suchen
         time_match = re.search(
             r"(\d{1,2}):(\d{2})",
             text
         )
 
         if time_match:
-            hour = int(time_match.group(1))
-            minute = int(time_match.group(2))
+
+            hour = int(
+                time_match.group(1)
+            )
+
+            minute = int(
+                time_match.group(2)
+            )
 
             dt = datetime(
                 year,
@@ -90,6 +116,7 @@ def get_games():
             all_day = False
 
         else:
+
             dt = datetime(
                 year,
                 month,
@@ -99,6 +126,7 @@ def get_games():
 
             all_day = True
 
+        # Mannschaftszeile holen
         team_row = row.find_next_sibling("tr")
 
         if not team_row:
@@ -121,20 +149,45 @@ def get_games():
             strip=True
         )
 
-        match_id = None
-
-        number_match = re.search(
-            r"\b(\d{9})\b",
-            text
+        # Falls keine Spiel-ID vorhanden ist,
+        # verwenden wir Heim + Gast + Datum.
+        fallback_key = (
+            f"{year:04d}-"
+            f"{month:02d}-"
+            f"{day:02d}|"
+            f"{home}|"
+            f"{away}"
         )
 
-        if number_match:
-            match_id = number_match.group(1)
+        # --------------------------------------------------
+        # DOPPELTE SPIELE VERHINDERN
+        # --------------------------------------------------
 
-        if not match_id:
-            match_id = (
-                f"{year}{month:02d}{day:02d}-"
-                f"{home}-{away}"
+        if match_id:
+
+            if match_id in seen_ids:
+                print(
+                    f"Doppeltes Spiel ignoriert: "
+                    f"{match_id} – {home} – {away}"
+                )
+                continue
+
+            seen_ids.add(match_id)
+
+        else:
+
+            if fallback_key in seen_fallback:
+                print(
+                    f"Doppeltes Spiel ignoriert: "
+                    f"{fallback_key}"
+                )
+                continue
+
+            seen_fallback.add(fallback_key)
+
+            match_id = fallback_key.replace(
+                "|",
+                "-"
             )
 
         games.append({
@@ -151,6 +204,11 @@ def get_games():
             "von FUSSBALL.DE gefunden."
         )
 
+    # Chronologisch sortieren
+    games.sort(
+        key=lambda game: game["datetime"]
+    )
+
     return games
 
 
@@ -165,6 +223,7 @@ def escape_ics(text):
 
 
 def make_ics(games):
+
     lines = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
@@ -176,6 +235,7 @@ def make_ics(games):
     ]
 
     for game in games:
+
         dt = game["datetime"]
 
         lines.append(
@@ -196,23 +256,30 @@ def make_ics(games):
         )
 
         if game["all_day"]:
+
             lines.append(
                 "DTSTART;VALUE=DATE:"
-                + dt.strftime("%Y%m%d")
+                + dt.strftime(
+                    "%Y%m%d"
+                )
             )
 
             lines.append(
                 "DTEND;VALUE=DATE:"
                 + (
                     dt + timedelta(days=1)
-                ).strftime("%Y%m%d")
+                ).strftime(
+                    "%Y%m%d"
+                )
             )
 
         else:
+
             start = dt.astimezone(
                 timezone.utc
             )
 
+            # Standardmäßig 2 Stunden Spieldauer
             end = start + timedelta(
                 hours=2
             )
@@ -255,6 +322,7 @@ def make_ics(games):
 
 
 def main():
+
     print(
         "Hole Spielplan von FUSSBALL.DE..."
     )
@@ -262,7 +330,7 @@ def main():
     games = get_games()
 
     print(
-        f"{len(games)} Spiele gefunden."
+        f"{len(games)} eindeutige Spiele gefunden."
     )
 
     calendar = make_ics(
@@ -274,6 +342,7 @@ def main():
         "w",
         encoding="utf-8"
     ) as file:
+
         file.write(
             calendar
         )
