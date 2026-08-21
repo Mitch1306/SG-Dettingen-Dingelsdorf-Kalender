@@ -25,9 +25,7 @@ jobs:
 
     - name: Kalender aktualisieren
       run: python update_calendar.py
-      - name: Kalender aktualisieren
-        run: python update_calendar.py
-
+      
       - name: Änderungen prüfen
         run: git status --short
 
