@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//SG Dettingen-Dingelsdorf//Landesliga 3//DE
+CALSCALE:GREGORIAN
+X-WR-CALNAME:SG Dettingen-Dingelsdorf
+BEGIN:VEVENT
+UID:sgdd-test-20260822@github.com
+DTSTAMP:20260821T150000Z
+DTSTART:20260822T133000Z
+DTEND:20260822T153000Z
+SUMMARY:SG Dettingen-Dingelsdorf – SC Gottmadingen-Bietingen
+LOCATION:Sportplatz Dettingen
+DESCRIPTION:Landesliga Südbaden Staffel 3
+END:VEVENT
+END:VCALENDAR
