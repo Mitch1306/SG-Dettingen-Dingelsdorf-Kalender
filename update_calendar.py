@@ -1,65 +1,151 @@
-import json
+import re
 import urllib.request
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
+from bs4 import BeautifulSoup
+
 
 TEAM_ID = "011MIDEIGO000000VTVG0001VTR8C1K7"
-
-URL = (
-    "https://www.fussball.de/ajax.team.matchplan/"
-    "-/mime-type/JSON/mode/PAGE/prev-season-allowed/false/"
-    "show-filter/false/"
-    f"team-id/{TEAM_ID}/max/1000/"
-    "datum-von/2026-07-01/datum-bis/2027-07-15/offset/0"
-)
-
 OUTPUT_FILE = "kalender.ics"
 LOCAL_TZ = ZoneInfo("Europe/Berlin")
 
 
+def get_matchplan_url():
+    return (
+        "https://www.fussball.de/ajax.team.matchplan/-/"
+        "mime-type/HTML/"
+        "show-venues/true/"
+        f"team-id/{TEAM_ID}/"
+        "wettkampftyp/1/"
+        "max/1000/"
+        "datum-von/2026-07-01/"
+        "datum-bis/2027-07-31/"
+        "offset/0"
+    )
+
+
 def get_games():
+    url = get_matchplan_url()
+
     request = urllib.request.Request(
-        URL,
+        url,
         headers={
             "User-Agent": "Mozilla/5.0"
         }
     )
 
     with urllib.request.urlopen(request, timeout=30) as response:
-        data = json.loads(response.read().decode("utf-8"))
+        html = response.read().decode("utf-8", errors="replace")
 
-    return find_games(data)
+    soup = BeautifulSoup(html, "html.parser")
 
-
-def find_games(data):
     games = []
 
-    def search(obj):
-        if isinstance(obj, dict):
-            if (
-                "homeTeam" in obj
-                and "awayTeam" in obj
-                and "matchMoment" in obj
-            ):
-                games.append(obj)
+    table = soup.select_one("#id-team-matchplan-table")
 
-            for value in obj.values():
-                search(value)
+    if not table:
+        raise RuntimeError(
+            "FUSSBALL.DE-Spielplantabelle wurde nicht gefunden."
+        )
 
-        elif isinstance(obj, list):
-            for item in obj:
-                search(item)
+    rows = table.select("tbody tr")
 
-    search(data)
+    for row in rows:
+        clubs = row.select("td.column-club .club-name")
 
-    # Doppelte Spiele entfernen
-    unique = {}
-    for game in games:
-        game_id = str(game.get("id", ""))
-        if game_id:
-            unique[game_id] = game
+        if len(clubs) < 2:
+            continue
 
-    return list(unique.values())
+        home_team = clubs[0].get_text(" ", strip=True)
+        away_team = clubs[1].get_text(" ", strip=True)
+
+        date_cell = row.select_one("td.column-date")
+
+        if not date_cell:
+            continue
+
+        date_text = date_cell.get_text(" ", strip=True)
+
+        # Datum suchen
+        date_match = re.search(
+            r"(\d{2}\.\d{2}\.\d{4})",
+            date_text
+        )
+
+        if not date_match:
+            continue
+
+        date_string = date_match.group(1)
+
+        # Uhrzeit suchen
+        time_match = re.search(
+            r"(\d{1,2}):(\d{2})",
+            date_text
+        )
+
+        day, month, year = map(
+            int,
+            date_string.split(".")
+        )
+
+        if time_match:
+            hour = int(time_match.group(1))
+            minute = int(time_match.group(2))
+
+            dt = datetime(
+                year,
+                month,
+                day,
+                hour,
+                minute,
+                tzinfo=LOCAL_TZ
+            )
+
+            all_day = False
+
+        else:
+            # Noch keine genaue Uhrzeit festgelegt
+            dt = datetime(
+                year,
+                month,
+                day,
+                tzinfo=LOCAL_TZ
+            )
+
+            all_day = True
+
+        # Spiel-ID suchen
+        match_link = row.select_one("td:last-child a")
+
+        if match_link:
+            href = match_link.get("href", "")
+            match_id_match = re.search(
+                r"match-id/([A-Z0-9]+)",
+                href
+            )
+
+            if match_id_match:
+                match_id = match_id_match.group(1)
+            else:
+                match_id = f"{year}{month:02d}{day:02d}-{home_team}-{away_team}"
+
+        else:
+            match_id = f"{year}{month:02d}{day:02d}-{home_team}-{away_team}"
+
+        games.append({
+            "id": match_id,
+            "home": home_team,
+            "away": away_team,
+            "datetime": dt,
+            "all_day": all_day,
+        })
+
+    if not games:
+        raise RuntimeError(
+            "Keine Spiele in der FUSSBALL.DE-Spielplantabelle gefunden."
+        )
+
+    return games
 
 
 def escape_ics(text):
@@ -84,40 +170,61 @@ def make_ics(games):
     ]
 
     for game in games:
-        game_id = str(game.get("id", ""))
 
-        home = game.get("homeTeam", {})
-        away = game.get("awayTeam", {})
+        dt = game["datetime"]
 
-        home_name = home.get("name", "Unbekannt")
-        away_name = away.get("name", "Unbekannt")
+        lines.append("BEGIN:VEVENT")
 
-        match_time = game.get("matchMoment")
+        lines.append(
+            f"UID:sgdd-{escape_ics(game['id'])}@github.com"
+        )
 
-        if not match_time:
-            continue
-
-        try:
-            dt = datetime.fromisoformat(
-                match_time.replace("Z", "+00:00")
+        lines.append(
+            "DTSTAMP:"
+            + datetime.now(timezone.utc).strftime(
+                "%Y%m%dT%H%M%SZ"
             )
-            dt = dt.astimezone(LOCAL_TZ)
-        except Exception:
-            continue
+        )
 
-        location = game.get("location", "") or ""
+        if game["all_day"]:
 
-        lines.extend([
-            "BEGIN:VEVENT",
-            f"UID:sgdd-{game_id}@github.com",
-            f"DTSTAMP:{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}",
-            f"DTSTART:{dt.strftime('%Y%m%dT%H%M%S')}",
-            f"DTEND:{dt.strftime('%Y%m%dT%H%M%S')}",
-            f"SUMMARY:{escape_ics(home_name)} – {escape_ics(away_name)}",
-            f"LOCATION:{escape_ics(location)}",
-            "DESCRIPTION:Landesliga Südbaden Staffel 3",
-            "END:VEVENT",
-        ])
+            lines.append(
+                f"DTSTART;VALUE=DATE:{dt.strftime('%Y%m%d')}"
+            )
+
+            lines.append(
+                f"DTEND;VALUE=DATE:{dt.strftime('%Y%m%d')}"
+            )
+
+        else:
+
+            utc_dt = dt.astimezone(timezone.utc)
+
+            end_dt = utc_dt.replace(
+                hour=utc_dt.hour
+            )
+
+            lines.append(
+                f"DTSTART:{utc_dt.strftime('%Y%m%dT%H%M%SZ')}"
+            )
+
+            lines.append(
+                f"DTEND:{end_dt.strftime('%Y%m%dT%H%M%SZ')}"
+            )
+
+        summary = (
+            f"{game['home']} – {game['away']}"
+        )
+
+        lines.append(
+            f"SUMMARY:{escape_ics(summary)}"
+        )
+
+        lines.append(
+            "DESCRIPTION:Landesliga Südbaden Staffel 3"
+        )
+
+        lines.append("END:VEVENT")
 
     lines.append("END:VCALENDAR")
 
@@ -125,17 +232,28 @@ def make_ics(games):
 
 
 def main():
+
+    print("Hole Spielplan von FUSSBALL.DE...")
+
     games = get_games()
 
-    if not games:
-        raise RuntimeError("Keine Spiele von FUSSBALL.DE gefunden.")
+    print(
+        f"{len(games)} Spiele gefunden."
+    )
 
     calendar = make_ics(games)
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
+    with open(
+        OUTPUT_FILE,
+        "w",
+        encoding="utf-8"
+    ) as file:
+
         file.write(calendar)
 
-    print(f"{len(games)} Spiele in {OUTPUT_FILE} geschrieben.")
+    print(
+        f"{OUTPUT_FILE} erfolgreich aktualisiert."
+    )
 
 
 if __name__ == "__main__":
