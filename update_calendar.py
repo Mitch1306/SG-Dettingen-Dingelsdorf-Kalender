@@ -3,6 +3,7 @@ import re
 import urllib.request
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 from bs4 import BeautifulSoup
@@ -71,10 +72,11 @@ def normalize_text(text):
 
 
 # ============================================================
-# FESTE SPIELSTÄTTEN LADEN
+# SPIELSTÄTTEN-DATENBANK
 # ============================================================
 
 def load_venues():
+
     path = BASE_DIR / VENUES_FILE
 
     if not path.exists():
@@ -87,9 +89,13 @@ def load_venues():
         "r",
         encoding="utf-8"
     ) as file:
+
         data = json.load(file)
 
-    clubs = data.get("clubs", {})
+    clubs = data.get(
+        "clubs",
+        {}
+    )
 
     if not clubs:
         raise RuntimeError(
@@ -105,15 +111,24 @@ def load_venues():
 
 
 def find_club(clubs, home_team):
-    home = normalize_text(home_team)
+
+    home = normalize_text(
+        home_team
+    )
 
     # Exakte Übereinstimmung
     for club_name, club_data in clubs.items():
 
-        if normalize_text(club_name) == home:
-            return club_name, club_data
+        if normalize_text(
+            club_name
+        ) == home:
 
-    # Leichte Abweichungen im Vereinsnamen
+            return (
+                club_name,
+                club_data
+            )
+
+    # Leichte Abweichungen
     for club_name, club_data in clubs.items():
 
         normalized = normalize_text(
@@ -124,9 +139,16 @@ def find_club(clubs, home_team):
             normalized in home
             or home in normalized
         ):
-            return club_name, club_data
 
-    return None, None
+            return (
+                club_name,
+                club_data
+            )
+
+    return (
+        None,
+        None
+    )
 
 
 def choose_fixed_venue(
@@ -134,16 +156,6 @@ def choose_fixed_venue(
     home_team,
     fussball_location
 ):
-    """
-    Sucht die passende feste Spielstätte.
-
-    Bei nur einer Spielstätte ist die Zuordnung
-    eindeutig.
-
-    Bei mehreren Spielstätten wird zusätzlich
-    die von FUSSBALL.DE gelieferte Bezeichnung
-    mit Name und Aliases verglichen.
-    """
 
     club_name, club_data = find_club(
         clubs,
@@ -161,7 +173,7 @@ def choose_fixed_venue(
     if not venues:
         return None
 
-    # Verein hat genau eine Spielstätte
+    # Nur eine Spielstätte
     if len(venues) == 1:
         return venues[0]
 
@@ -172,7 +184,7 @@ def choose_fixed_venue(
     if not scraped:
         return None
 
-    # Erst Aliases prüfen
+    # Zuerst Aliases prüfen
     for venue in venues:
 
         for alias in venue.get(
@@ -191,13 +203,17 @@ def choose_fixed_venue(
                     or scraped in alias_normalized
                 )
             ):
+
                 return venue
 
     # Danach den normalen Namen prüfen
     for venue in venues:
 
         venue_name = normalize_text(
-            venue.get("name", "")
+            venue.get(
+                "name",
+                ""
+            )
         )
 
         if (
@@ -207,11 +223,12 @@ def choose_fixed_venue(
                 or scraped in venue_name
             )
         ):
+
             return venue
 
     print(
-        "  Keine eindeutige Spielstätte "
-        f"für {home_team} gefunden."
+        "  Keine eindeutige feste "
+        f"Spielstätte für {home_team} gefunden."
     )
 
     return None
@@ -223,19 +240,25 @@ def choose_fixed_venue(
 
 def find_coordinates_in_json(data):
 
-    if isinstance(data, dict):
+    if isinstance(
+        data,
+        dict
+    ):
 
         latitude = None
         longitude = None
 
         for key, value in data.items():
 
-            key_lower = str(key).lower()
+            key_lower = str(
+                key
+            ).lower()
 
             if key_lower in (
                 "latitude",
                 "lat"
             ):
+
                 latitude = value
 
             if key_lower in (
@@ -243,6 +266,7 @@ def find_coordinates_in_json(data):
                 "lng",
                 "lon"
             ):
+
                 longitude = value
 
         if (
@@ -251,14 +275,17 @@ def find_coordinates_in_json(data):
         ):
 
             try:
+
                 return (
                     float(latitude),
                     float(longitude)
                 )
+
             except (
                 TypeError,
                 ValueError
             ):
+
                 pass
 
         for value in data.values():
@@ -270,7 +297,10 @@ def find_coordinates_in_json(data):
             if result:
                 return result
 
-    elif isinstance(data, list):
+    elif isinstance(
+        data,
+        list
+    ):
 
         for item in data:
 
@@ -349,11 +379,11 @@ def find_coordinates_in_html(html):
                 match.group(2)
             )
 
-            # Deutschland
             if (
                 47 <= latitude <= 55
                 and 5 <= longitude <= 16
             ):
+
                 return (
                     latitude,
                     longitude
@@ -363,6 +393,7 @@ def find_coordinates_in_html(html):
             ValueError,
             TypeError
         ):
+
             pass
 
     return None
@@ -372,9 +403,7 @@ def find_coordinates_in_html(html):
 # KOORDINATEN AUS GOOGLE-MAPS-LINK
 # ============================================================
 
-def find_coordinates_in_google_link(
-    href
-):
+def find_coordinates_in_google_link(href):
 
     if not href:
         return None
@@ -432,6 +461,7 @@ def find_coordinates_in_google_link(
                 47 <= latitude <= 55
                 and 5 <= longitude <= 16
             ):
+
                 return (
                     latitude,
                     longitude
@@ -441,6 +471,7 @@ def find_coordinates_in_google_link(
             ValueError,
             TypeError
         ):
+
             pass
 
     return None
@@ -504,7 +535,7 @@ def extract_clean_address(location):
     if match:
         return match.group(1).strip()
 
-    # Letzte Möglichkeit: PLZ + Ort
+    # Fallback PLZ + Ort
     postal = re.search(
         r"(\d{5}\s+"
         r"[A-Za-zÄÖÜäöüßÀ-ÿ0-9 .'\-/]+)$",
@@ -548,12 +579,13 @@ def extract_clean_address(location):
 
 
 # ============================================================
-# SPIELSTÄTTE VON FUSSBALL.DE
+# SPIELORT VON FUSSBALL.DE
 # ============================================================
 
 def get_game_location(game_url):
 
     if not game_url:
+
         return {
             "location": "",
             "address": "",
@@ -576,10 +608,7 @@ def get_game_location(game_url):
         latitude = None
         longitude = None
 
-        # ----------------------------------------------------
         # JSON-LD
-        # ----------------------------------------------------
-
         scripts = soup.select(
             'script[type="application/ld+json"]'
         )
@@ -589,6 +618,7 @@ def get_game_location(game_url):
             text = script.string
 
             if not text:
+
                 text = script.get_text(
                     strip=True
                 )
@@ -616,10 +646,7 @@ def get_game_location(game_url):
             except Exception:
                 pass
 
-        # ----------------------------------------------------
-        # Google Maps
-        # ----------------------------------------------------
-
+        # Google Maps Link
         google_links = soup.select(
             'a[href*="google."]'
         )
@@ -652,10 +679,7 @@ def get_game_location(game_url):
                 location = link_text
                 break
 
-        # ----------------------------------------------------
         # HTML nach Koordinaten
-        # ----------------------------------------------------
-
         if (
             latitude is None
             or longitude is None
@@ -672,10 +696,7 @@ def get_game_location(game_url):
                 latitude = coordinates[0]
                 longitude = coordinates[1]
 
-        # ----------------------------------------------------
-        # Falls kein Google-Link vorhanden
-        # ----------------------------------------------------
-
+        # Fallback für Spielstätten-Text
         if not location:
 
             page_text = soup.get_text(
@@ -746,7 +767,72 @@ def get_game_location(game_url):
 
 
 # ============================================================
-# SPIELE VON FUSSBALL.DE LADEN
+# APPLE-MAPS-LINK
+# ============================================================
+
+def create_apple_maps_url(
+    name,
+    latitude,
+    longitude
+):
+
+    if (
+        latitude is None
+        or longitude is None
+    ):
+
+        return ""
+
+    # Apple Maps Unified URL
+    #
+    # Der Ort wird über die Koordinaten eindeutig
+    # bestimmt. Der Name dient als Such-/Anzeigetext.
+
+    query = quote(
+        name or "Spielstätte",
+        safe=""
+    )
+
+    return (
+        "https://maps.apple.com/"
+        "?ll="
+        + str(latitude)
+        + "%2C"
+        + str(longitude)
+        + "&q="
+        + query
+    )
+
+
+# ============================================================
+# iCAL ESCAPING
+# ============================================================
+
+def escape_ics(text):
+
+    return (
+        str(text)
+        .replace("\\", "\\\\")
+        .replace(";", "\\;")
+        .replace(",", "\\,")
+        .replace("\n", "\\n")
+    )
+
+
+def escape_ics_parameter(text):
+
+    return (
+        str(text)
+        .replace("\\", "\\\\")
+        .replace('"', '\\"')
+        .replace(";", "\\;")
+        .replace(",", "\\,")
+        .replace("\n", "\\n")
+    )
+
+
+# ============================================================
+# SPIELE LADEN
 # ============================================================
 
 def get_games(clubs):
@@ -785,10 +871,7 @@ def get_games(clubs):
         if "ME" not in text:
             continue
 
-        # ----------------------------------------------------
         # Spiel-ID
-        # ----------------------------------------------------
-
         id_match = re.search(
             r"\b(\d{9})\b",
             text
@@ -800,10 +883,7 @@ def get_games(clubs):
             else None
         )
 
-        # ----------------------------------------------------
         # Datum
-        # ----------------------------------------------------
-
         date_match = re.search(
             r"(\d{2}\.\d{2}\.\d{2,4})",
             text
@@ -820,10 +900,7 @@ def get_games(clubs):
         if year < 100:
             year += 2000
 
-        # ----------------------------------------------------
         # Uhrzeit
-        # ----------------------------------------------------
-
         time_match = re.search(
             r"(\d{1,2}):(\d{2})",
             text
@@ -861,10 +938,7 @@ def get_games(clubs):
 
             all_day = True
 
-        # ----------------------------------------------------
         # Mannschaften
-        # ----------------------------------------------------
-
         team_row = (
             row.find_next_sibling("tr")
         )
@@ -889,10 +963,7 @@ def get_games(clubs):
             strip=True
         )
 
-        # ----------------------------------------------------
         # Spiel-Link
-        # ----------------------------------------------------
-
         game_url = ""
 
         game_link = team_row.select_one(
@@ -919,10 +990,7 @@ def get_games(clubs):
                 + game_url
             )
 
-        # ----------------------------------------------------
-        # Doppelte Spiele verhindern
-        # ----------------------------------------------------
-
+        # Doppelte Spiele vermeiden
         fallback_key = (
             f"{year:04d}-"
             f"{month:02d}-"
@@ -936,8 +1004,8 @@ def get_games(clubs):
             if match_id in seen_ids:
 
                 print(
-                    "Doppeltes Spiel ignoriert:"
-                    f" {match_id}"
+                    "Doppeltes Spiel ignoriert: "
+                    f"{match_id}"
                 )
 
                 continue
@@ -960,10 +1028,7 @@ def get_games(clubs):
                 "-"
             )
 
-        # ----------------------------------------------------
-        # FUSSBALL.DE Spielstätte laden
-        # ----------------------------------------------------
-
+        # FUSSBALL.DE Spielort
         location = ""
         address = ""
         latitude = None
@@ -998,10 +1063,7 @@ def get_games(clubs):
                 location_data["longitude"]
             )
 
-        # ----------------------------------------------------
-        # UNSERE FESTE SPIELSTÄTTE
-        # ----------------------------------------------------
-
+        # Unsere feste Spielstätte
         fixed_venue = choose_fixed_venue(
             clubs,
             home,
@@ -1036,8 +1098,6 @@ def get_games(clubs):
                 "longitude"
             )
 
-            # Nur dann ersetzen, wenn in JSON
-            # tatsächlich Koordinaten vorhanden sind.
             if (
                 fixed_latitude is not None
                 and fixed_longitude is not None
@@ -1105,33 +1165,6 @@ def get_games(clubs):
 
 
 # ============================================================
-# iCAL ESCAPING
-# ============================================================
-
-def escape_ics(text):
-
-    return (
-        str(text)
-        .replace("\\", "\\\\")
-        .replace(";", "\\;")
-        .replace(",", "\\,")
-        .replace("\n", "\\n")
-    )
-
-
-def escape_ics_parameter(text):
-
-    return (
-        str(text)
-        .replace("\\", "\\\\")
-        .replace('"', '\\"')
-        .replace(";", "\\;")
-        .replace(",", "\\,")
-        .replace("\n", "\\n")
-    )
-
-
-# ============================================================
 # iCAL ERSTELLEN
 # ============================================================
 
@@ -1158,10 +1191,7 @@ def make_ics(games):
             "BEGIN:VEVENT"
         )
 
-        # ----------------------------------------------------
         # ID
-        # ----------------------------------------------------
-
         lines.append(
             "UID:sgdd-"
             + escape_ics(
@@ -1170,10 +1200,7 @@ def make_ics(games):
             + "@github.com"
         )
 
-        # ----------------------------------------------------
         # Erstellungszeit
-        # ----------------------------------------------------
-
         lines.append(
             "DTSTAMP:"
             + datetime.now(
@@ -1183,10 +1210,7 @@ def make_ics(games):
             )
         )
 
-        # ----------------------------------------------------
         # Termine ohne Uhrzeit
-        # ----------------------------------------------------
-
         if game["all_day"]:
 
             start_date = dt.date()
@@ -1222,10 +1246,7 @@ def make_ics(games):
                 )
             )
 
-        # ----------------------------------------------------
         # Termine mit Uhrzeit
-        # ----------------------------------------------------
-
         else:
 
             start = dt.astimezone(
@@ -1251,10 +1272,7 @@ def make_ics(games):
                 )
             )
 
-        # ----------------------------------------------------
-        # TITEL
-        # ----------------------------------------------------
-
+        # Titel
         lines.append(
             "SUMMARY:"
             + escape_ics(
@@ -1263,16 +1281,7 @@ def make_ics(games):
             )
         )
 
-        # ----------------------------------------------------
-        # LOCATION
-        # ----------------------------------------------------
-        #
-        # Wichtig:
-        # LOCATION bleibt die Adresse.
-        # Dadurch kann Apple Kalender die Adresse
-        # weiterhin als Ort erkennen.
-        # ----------------------------------------------------
-
+        # LOCATION bleibt die Adresse
         if game["address"]:
 
             lines.append(
@@ -1291,10 +1300,7 @@ def make_ics(games):
                 )
             )
 
-        # ----------------------------------------------------
         # GEO + Apple Structured Location
-        # ----------------------------------------------------
-
         if (
             game["latitude"] is not None
             and game["longitude"] is not None
@@ -1343,6 +1349,7 @@ def make_ics(games):
             "Landesliga Südbaden Staffel 3"
         )
 
+        # Spielstätte
         if (
             game["location"]
             and game["location"]
@@ -1356,6 +1363,22 @@ def make_ics(games):
                 )
             )
 
+        # Apple Maps Link
+        apple_maps_url = create_apple_maps_url(
+            game["location"]
+            or game["address"],
+            game["latitude"],
+            game["longitude"]
+        )
+
+        if apple_maps_url:
+
+            description += (
+                "\\nApple Maps: "
+                + apple_maps_url
+            )
+
+        # FUSSBALL.DE Link
         if game["game_url"]:
 
             description += (
@@ -1399,12 +1422,12 @@ def main():
         "========================================"
     )
 
-    # 1. Spielstätten-Datenbank laden
+    # Spielstätten laden
     clubs = load_venues()
 
     print()
 
-    # 2. Spielplan laden
+    # Spielplan laden
     games = get_games(
         clubs
     )
@@ -1418,12 +1441,12 @@ def main():
 
     print()
 
-    # 3. Kalender erzeugen
+    # Kalender erzeugen
     calendar = make_ics(
         games
     )
 
-    # 4. Datei speichern
+    # Datei speichern
     output_path = (
         BASE_DIR
         / OUTPUT_FILE
@@ -1450,4 +1473,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
