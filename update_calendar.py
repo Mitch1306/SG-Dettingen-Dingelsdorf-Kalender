@@ -21,6 +21,7 @@ def fetch_url(url):
     """
     Ruft eine Webseite von FUSSBALL.DE ab.
     """
+
     request = urllib.request.Request(
         url,
         headers={
@@ -32,6 +33,7 @@ def fetch_url(url):
         request,
         timeout=30
     ) as response:
+
         return response.read().decode(
             "utf-8",
             errors="replace"
@@ -49,7 +51,9 @@ def get_game_location(game_url):
 
     try:
 
-        html = fetch_url(game_url)
+        html = fetch_url(
+            game_url
+        )
 
         soup = BeautifulSoup(
             html,
@@ -57,8 +61,7 @@ def get_game_location(game_url):
         )
 
         # --------------------------------------------------
-        # 1. Bevorzugte Methode:
-        # Google-Maps-Link der Spielstätte
+        # Google-Maps-Link / Spielstätte
         # --------------------------------------------------
 
         google_links = soup.select(
@@ -76,8 +79,7 @@ def get_game_location(game_url):
                 return location_text
 
         # --------------------------------------------------
-        # 2. Fallback:
-        # Nach typischen Spielstätten-Begriffen suchen
+        # Fallback: Spielort aus Seitentext
         # --------------------------------------------------
 
         page_text = soup.get_text(
@@ -87,9 +89,10 @@ def get_game_location(game_url):
 
         location_patterns = [
             r"((?:Rasenplatz|Kunstrasenplatz|Sportplatz|"
-            r"Stadion|Sportanlage|Kunstrasen|Rasenplatz).*?)"
-            r"(?=\s+(?:Schiedsrichter|Assistenten|Zuschauer|"
-            r"Staffel-ID|Spielberichte|News|$))"
+            r"Stadion|Sportanlage|Kunstrasen).*?)"
+            r"(?=\s+(?:Schiedsrichter|Assistenten|"
+            r"Zuschauer|Staffel-ID|Spielberichte|"
+            r"News|$))"
         ]
 
         for pattern in location_patterns:
@@ -104,7 +107,6 @@ def get_game_location(game_url):
 
                 location = match.group(1).strip()
 
-                # Überflüssige Leerzeichen entfernen
                 location = re.sub(
                     r"\s+",
                     " ",
@@ -166,7 +168,7 @@ def get_games():
             continue
 
         # --------------------------------------------------
-        # SPIEL-ID SUCHEN
+        # SPIEL-ID
         # --------------------------------------------------
 
         number_match = re.search(
@@ -180,7 +182,7 @@ def get_games():
             match_id = number_match.group(1)
 
         # --------------------------------------------------
-        # DATUM SUCHEN
+        # DATUM
         # --------------------------------------------------
 
         date_match = re.search(
@@ -203,7 +205,7 @@ def get_games():
             year += 2000
 
         # --------------------------------------------------
-        # UHRZEIT SUCHEN
+        # UHRZEIT
         # --------------------------------------------------
 
         time_match = re.search(
@@ -234,10 +236,10 @@ def get_games():
 
         else:
 
-            # Keine Uhrzeit bekannt.
+            # Keine genaue Uhrzeit bekannt.
             #
-            # Das Spiel wird später als
-            # komplettes Wochenende dargestellt.
+            # Das Spiel wird als komplettes
+            # Wochenende eingetragen.
 
             dt = datetime(
                 year,
@@ -249,7 +251,7 @@ def get_games():
             all_day = True
 
         # --------------------------------------------------
-        # MANNSCHAFTSZEILE
+        # MANNSCHAFTEN
         # --------------------------------------------------
 
         team_row = row.find_next_sibling(
@@ -277,18 +279,15 @@ def get_games():
         )
 
         # --------------------------------------------------
-        # SPIEL-URL SUCHEN
+        # SPIEL-URL
         # --------------------------------------------------
 
         game_url = ""
 
-        # Zuerst in der Mannschaftszeile suchen
         game_link = team_row.select_one(
             'a[href*="/spiel/"]'
         )
 
-        # Falls dort nichts gefunden wurde,
-        # in der gesamten Matchplan-Zeile suchen
         if not game_link:
 
             game_link = row.select_one(
@@ -302,7 +301,6 @@ def get_games():
                 ""
             )
 
-        # Relative URLs absichern
         if game_url.startswith("/"):
 
             game_url = (
@@ -363,7 +361,7 @@ def get_games():
             )
 
         # --------------------------------------------------
-        # SPIELORT LADEN
+        # SPIELORT
         # --------------------------------------------------
 
         location = ""
@@ -420,6 +418,7 @@ def get_games():
         )
 
     # Chronologisch sortieren
+
     games.sort(
         key=lambda game: game["datetime"]
     )
@@ -472,20 +471,15 @@ def make_ics(games):
         )
 
         # --------------------------------------------------
-        # SPIEL OHNE UHRZEIT
+        # OHNE UHRZEIT
         # --------------------------------------------------
 
         if game["all_day"]:
 
             start_date = dt.date()
 
-            # Das entsprechende Wochenende bestimmen.
-            #
             # Samstag = 5
             # Sonntag = 6
-            #
-            # Bei Sonntag gehen wir einen Tag zurück.
-            # Bei Samstag bleiben wir auf Samstag.
 
             if start_date.weekday() == 6:
 
@@ -498,8 +492,8 @@ def make_ics(games):
 
                 saturday = start_date
 
-            # DTEND ist exklusiv.
-            # Samstag + Sonntag bedeutet daher Montag.
+            # Samstag + Sonntag
+            # DTEND ist exklusiv -> Montag
 
             monday = (
                 saturday
@@ -521,37 +515,41 @@ def make_ics(games):
             )
 
         # --------------------------------------------------
-        # SPIEL MIT UHRZEIT
+        # MIT UHRZEIT
+        #
+        # WICHTIG:
+        # Jetzt direkt Europe/Berlin statt UTC/GMT.
+        # Dadurch sollte Apple keine zusätzliche
+        # GMT-Zeile mehr anzeigen.
         # --------------------------------------------------
 
         else:
 
-            start = dt.astimezone(
-                timezone.utc
+            start_local = dt.astimezone(
+                LOCAL_TZ
             )
 
-            # Standardmäßig 2 Stunden Spieldauer
-            end = (
-                start
+            end_local = (
+                start_local
                 + timedelta(hours=2)
             )
 
             lines.append(
-                "DTSTART:"
-                + start.strftime(
-                    "%Y%m%dT%H%M%SZ"
+                "DTSTART;TZID=Europe/Berlin:"
+                + start_local.strftime(
+                    "%Y%m%dT%H%M%S"
                 )
             )
 
             lines.append(
-                "DTEND:"
-                + end.strftime(
-                    "%Y%m%dT%H%M%SZ"
+                "DTEND;TZID=Europe/Berlin:"
+                + end_local.strftime(
+                    "%Y%m%dT%H%M%S"
                 )
             )
 
         # --------------------------------------------------
-        # SPIELTITEL
+        # TITEL
         # --------------------------------------------------
 
         lines.append(
@@ -623,17 +621,13 @@ def main():
 
     games = get_games()
 
-    print(
-        ""
-    )
+    print()
 
     print(
         f"{len(games)} eindeutige Spiele gefunden."
     )
 
-    print(
-        ""
-    )
+    print()
 
     calendar = make_ics(
         games
