@@ -772,36 +772,87 @@ def get_game_location(game_url):
 
 def create_apple_maps_url(
     name,
+    address,
     latitude,
     longitude
 ):
+    """
+    Erzeugt einen Apple-Maps-Link.
+
+    Priorität:
+    1. Koordinaten, wenn vorhanden
+    2. Adresse, wenn keine Koordinaten vorhanden
+
+    Dadurch bekommt auch eine Spielstätte ohne
+    hinterlegte Koordinaten einen Apple-Maps-Link.
+    """
+
+    # --------------------------------------------------------
+    # FALL 1: Koordinaten vorhanden
+    # --------------------------------------------------------
 
     if (
-        latitude is None
-        or longitude is None
+        latitude is not None
+        and longitude is not None
     ):
 
-        return ""
+        query_text = (
+            name
+            or address
+            or "Spielstätte"
+        )
 
-    # Apple Maps Unified URL
-    #
-    # Der Ort wird über die Koordinaten eindeutig
-    # bestimmt. Der Name dient als Such-/Anzeigetext.
+        query = quote(
+            query_text,
+            safe=""
+        )
 
-    query = quote(
-        name or "Spielstätte",
-        safe=""
-    )
+        return (
+            "https://maps.apple.com/"
+            "?ll="
+            + str(latitude)
+            + "%2C"
+            + str(longitude)
+            + "&q="
+            + query
+        )
 
-    return (
-        "https://maps.apple.com/"
-        "?ll="
-        + str(latitude)
-        + "%2C"
-        + str(longitude)
-        + "&q="
-        + query
-    )
+    # --------------------------------------------------------
+    # FALL 2: Keine Koordinaten
+    # Adresse verwenden
+    # --------------------------------------------------------
+
+    if address:
+
+        address_query = quote(
+            address,
+            safe=""
+        )
+
+        return (
+            "https://maps.apple.com/"
+            "?address="
+            + address_query
+        )
+
+    # --------------------------------------------------------
+    # FALL 3: Nur Name vorhanden
+    # --------------------------------------------------------
+
+    if name:
+
+        name_query = quote(
+            name,
+            safe=""
+        )
+
+        return (
+            "https://maps.apple.com/"
+            "?q="
+            + name_query
+        )
+
+    return ""
 
 
 # ============================================================
@@ -1363,10 +1414,13 @@ def make_ics(games):
                 )
             )
 
-        # Apple Maps Link
+        # ----------------------------------------------------
+        # APPLE MAPS LINK
+        # ----------------------------------------------------
+
         apple_maps_url = create_apple_maps_url(
-            game["location"]
-            or game["address"],
+            game["location"],
+            game["address"],
             game["latitude"],
             game["longitude"]
         )
@@ -1378,7 +1432,15 @@ def make_ics(games):
                 + apple_maps_url
             )
 
-        # FUSSBALL.DE Link
+            print(
+                "  ✓ Apple-Maps-Link erzeugt: "
+                + apple_maps_url
+            )
+
+        # ----------------------------------------------------
+        # FUSSBALL.DE LINK
+        # ----------------------------------------------------
+
         if game["game_url"]:
 
             description += (
