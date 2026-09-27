@@ -7,90 +7,90 @@ X-WR-CALNAME:SG Dettingen-Dingelsdorf
 X-WR-TIMEZONE:Europe/Berlin
 BEGIN:VEVENT
 UID:sgdd-330014056@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20260927T133000Z
-DTEND:20260927T153000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20260927T153000
+DTEND;TZID=Europe/Berlin:20260927T173000
 SUMMARY:FC Pfaffenweiler – SG Dettingen-Dingelsdorf
 LOCATION:Rasenplatz\, Kettner Edelmetalle Sportpark (RS)\, An der Gierhalde 1 a\, 78052 Villingen-Schwenningen
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/fc-pfaffenweiler-sg-dettingen-dingelsdorf/-/spiel/031EQQASRK000000VS5489BTVUS470OH
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014063@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20261003T133000Z
-DTEND:20261003T153000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20261003T153000
+DTEND;TZID=Europe/Berlin:20261003T173000
 SUMMARY:SG Dettingen-Dingelsdorf – FV Möhringen
 LOCATION:Rasenplatz\, k-tech-Arena Dettingen\, Allensbacher Str. 43\, 78465 Konstanz
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/sg-dettingen-dingelsdorf-fv-moehringen/-/spiel/031EQQAT4S000000VS5489BTVUS470OH
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014067@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20261010T133000Z
-DTEND:20261010T153000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20261010T153000
+DTEND;TZID=Europe/Berlin:20261010T173000
 SUMMARY:VfR Stockach 09 – SG Dettingen-Dingelsdorf
 LOCATION:Rasenplatz\, Osterholz-Stadion Stockach\, Winterspürer Str.\, 78333 Stockach
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/vfr-stockach-09-sg-dettingen-dingelsdorf/-/spiel/031EQQATA4000000VS5489BTVUS470OH
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014079@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20261017T133000Z
-DTEND:20261017T153000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20261017T153000
+DTEND;TZID=Europe/Berlin:20261017T173000
 SUMMARY:SG Dettingen-Dingelsdorf – FC 03 Radolfzell
 LOCATION:Rasenplatz\, k-tech-Arena Dettingen\, Allensbacher Str. 43\, 78465 Konstanz
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/sg-dettingen-dingelsdorf-fc-03-radolfzell/-/spiel/031EQQATRS000000VS5489BTVUS470OH
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014085@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20261024T133000Z
-DTEND:20261024T153000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20261024T153000
+DTEND;TZID=Europe/Berlin:20261024T173000
 SUMMARY:Hegauer FV – SG Dettingen-Dingelsdorf
 LOCATION:Rasenplatz\, Stadion Welschingen\, Bundesstr. 19\, 78234 Engen
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/hegauer-fv-sg-dettingen-dingelsdorf/-/spiel/031EQQAU5K000000VS5489BTVUS470OH
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014095@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20261031T133000Z
-DTEND:20261031T153000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20261031T143000
+DTEND;TZID=Europe/Berlin:20261031T163000
 SUMMARY:SG Dettingen-Dingelsdorf – ESV Südstern Singen
 LOCATION:Rasenplatz\, k-tech-Arena Dettingen\, Allensbacher Str. 43\, 78465 Konstanz
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/sg-dettingen-dingelsdorf-esv-suedstern-singen/-/spiel/031EQQAULO000000VS5489BTVUS470OH
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014097@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20261108T140000Z
-DTEND:20261108T160000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20261108T150000
+DTEND;TZID=Europe/Berlin:20261108T170000
 SUMMARY:FC 08 Villingen 2 – SG Dettingen-Dingelsdorf
 LOCATION:Kunstrasenplatz\, Im Friedengrund Kunstrasen   (FC 08)\, Im Friedengrund 3\, 78050 Villingen-Schwenningen
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/fc-08-villingen-2-sg-dettingen-dingelsdorf/-/spiel/031EQQAUP4000000VS5489BTVUS470OH
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014112@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20261115T133000Z
-DTEND:20261115T153000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20261115T143000
+DTEND;TZID=Europe/Berlin:20261115T163000
 SUMMARY:SpVgg F.A.L. – SG Dettingen-Dingelsdorf
 LOCATION:Rasenplatz\, HSM-Sportzentrum Frickingen\, Bruckfelder Str.\, 88699 Frickingen
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/spvgg-fal-sg-dettingen-dingelsdorf/-/spiel/031EQQAVJ8000000VS5489BTVUS470OH
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014119@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20261121T133000Z
-DTEND:20261121T153000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20261121T143000
+DTEND;TZID=Europe/Berlin:20261121T163000
 SUMMARY:SG Dettingen-Dingelsdorf – TSV Aach-Linz
 LOCATION:Rasenplatz\, k-tech-Arena Dettingen\, Allensbacher Str. 43\, 78465 Konstanz
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/sg-dettingen-dingelsdorf-tsv-aach-linz/-/spiel/031EQQAVUC000000VS5489BTVUS470OH
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014122@github.com
-DTSTAMP:20260927T104326Z
-DTSTART:20261128T133000Z
-DTEND:20261128T153000Z
+DTSTAMP:20260927T105009Z
+DTSTART;TZID=Europe/Berlin:20261128T143000
+DTEND;TZID=Europe/Berlin:20261128T163000
 SUMMARY:SG Dettingen-Dingelsdorf – FC Gutmadingen
 LOCATION:Rasenplatz\, k-tech-Arena Dettingen\, Allensbacher Str. 43\, 78465 Konstanz
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/sg-dettingen-dingelsdorf-fc-gutmadingen/-/spiel/031EQQB03G000000VS5489BTVUS470OH
