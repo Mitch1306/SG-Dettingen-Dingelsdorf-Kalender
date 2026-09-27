@@ -1,0 +1,224 @@
+{
+  "version": 1,
+  "season": "2026/27",
+  "league": "Landesliga Südbaden Staffel 3",
+  "description": "Feste Spielstätten-Datenbank für die Herrenmannschaften der Landesliga Südbaden Staffel 3. Mehrere Spielstätten und FUSSBALL.DE-Namensvarianten werden unterstützt. Koordinaten sind nur eingetragen, wenn sie unabhängig verifiziert werden konnten; fehlende Koordinaten können weiterhin aus der jeweiligen FUSSBALL.DE-Spielseite übernommen werden.",
+  "clubs": {
+    "SG Dettingen-Dingelsdorf": {
+      "venues": [
+        {
+          "name": "k-tech-Arena Dettingen",
+          "address": "Allensbacher Str. 43, 78465 Konstanz",
+          "aliases": ["k-tech-Arena Dettingen", "Rasenplatz, k-tech-Arena Dettingen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE"
+        }
+      ]
+    },
+    "Hegauer FV": {
+      "venues": [
+        {
+          "name": "Stadion Welschingen",
+          "address": "Bundesstr. 19, 78234 Engen-Welschingen",
+          "aliases": ["Stadion Welschingen", "Stadion Welschingen K", "Rasenplatz, Stadion Welschingen", "Kunstrasenplatz, Stadion Welschingen K"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE"
+        }
+      ]
+    },
+    "FC 03 Radolfzell": {
+      "venues": [
+        {
+          "name": "Mettnau-Stadion Radolfzell",
+          "address": "Strandbadstr. 46, 78315 Radolfzell am Bodensee",
+          "aliases": ["Mettnau-Stadion", "FC - Mettnaustadion", "Rasenplatz, Mettnau-Stadion"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE / FC 03 Radolfzell"
+        }
+      ]
+    },
+    "FC 08 Villingen 2": {
+      "venues": [
+        {
+          "name": "MS TECHNOLOGIE-ARENA",
+          "address": "Im Friedengrund 1/3, 78050 Villingen-Schwenningen",
+          "aliases": ["MS TECHNOLOGIE-ARENA (FC 08)", "MS TECHNOLOGIE-ARENA"],
+          "latitude": 48.055999,
+          "longitude": 8.429695,
+          "source": "FUSSBALL.DE / öffentliche Stadiondaten"
+        },
+        {
+          "name": "Im Friedengrund Kunstrasen",
+          "address": "Im Friedengrund 3, 78050 Villingen-Schwenningen",
+          "aliases": ["Im Friedengrund Kunstrasen (FC 08)", "Kunstrasenplatz, Im Friedengrund Kunstrasen (FC 08)", "Im Friedengrund Kunstrasen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE"
+        }
+      ]
+    },
+    "ESV Südstern Singen": {
+      "venues": [
+        {
+          "name": "Hardt-Stadion Singen",
+          "address": "Bohlinger Str. 75, 78224 Singen (Hohentwiel)",
+          "aliases": ["Hardt-Stadion", "Hardt-Stadion Singen", "Rasenplatz, Hardt-Stadion Singen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE"
+        }
+      ]
+    },
+    "VfR Stockach 09": {
+      "venues": [
+        {
+          "name": "Osterholz-Stadion Stockach",
+          "address": "Am Osterholz 11, 78333 Stockach",
+          "aliases": ["Osterholz-Stadion Stockach", "Rasenplatz, Osterholz-Stadion Stockach"],
+          "latitude": 47.85006,
+          "longitude": 9.02383,
+          "source": "FUSSBALL.DE / Karten-POI-Daten"
+        }
+      ]
+    },
+    "FC Singen": {
+      "venues": [
+        {
+          "name": "Hohentwiel-Stadion Singen",
+          "address": "Friedinger Str. 24, 78224 Singen (Hohentwiel)",
+          "aliases": ["Hohentwiel-Stadion", "Hohentwielstadion", "Rasenplatz, Hohentwiel-Stadion Singen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE / FC Singen 04"
+        }
+      ]
+    },
+    "FC Königsfeld": {
+      "venues": [
+        {
+          "name": "HSS Hydraulik Sportpark",
+          "address": "Schwimmbad 20, 78126 Königsfeld im Schwarzwald",
+          "aliases": ["HSS Hydraulik Sportpark", "Rasenplatz, HSS Hydraulik Sportpark"],
+          "latitude": null,
+          "longitude": null,
+          "source": "Europlan / Vereinsdaten; Adresse noch gegen aktuelle Herren-Spielstättenbezeichnung zu prüfen"
+        },
+        {
+          "name": "HSS Hydraulik Sportpark Kunstrasen Königsfeld",
+          "address": "Schwimmbad 3, 78126 Königsfeld im Schwarzwald",
+          "aliases": ["HSS Hydraulik Sportpark Kunstrasen Königsfeld", "Kunstrasenplatz, HSS Hydraulik Sportpark Kunstrasen Königsfeld"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE"
+        }
+      ]
+    },
+    "SpVgg F.A.L.": {
+      "venues": [
+        {
+          "name": "HSM-Sportzentrum Frickingen",
+          "address": "Bruckfelder Str. 1, 88699 Frickingen",
+          "aliases": ["HSM-Sportzentrum Frickingen", "HSM-Sportzentrum am Aubach", "Rasenplatz, HSM-Sportzentrum Frickingen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE / Gemeindedaten"
+        }
+      ]
+    },
+    "FC Gutmadingen": {
+      "venues": [
+        {
+          "name": "Sportplatz Gutmadingen",
+          "address": "Hans-Kramer-Str. 17, 78187 Geisingen",
+          "aliases": ["Sportplatz Gutmadingen", "Rasenplatz, Sportplatz Gutmadingen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FC Gutmadingen / Vereinsdaten"
+        }
+      ]
+    },
+    "SC Gottmadingen-Bietingen": {
+      "venues": [
+        {
+          "name": "Sportplatz Katzental Gottmadingen",
+          "address": "Zum Katzental 3, 78244 Gottmadingen",
+          "aliases": ["Sportplatz Katzental", "Sportplatz-Katzental Gottm.", "Sportplatz Katzental Gottmadingen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "SC Gottmadingen-Bietingen"
+        },
+        {
+          "name": "Sportplatz Bietingen",
+          "address": "Schachenhauweg 9, 78244 Gottmadingen-Bietingen",
+          "aliases": ["Sportplatz Bietingen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "SC Gottmadingen-Bietingen"
+        }
+      ]
+    },
+    "FC Pfaffenweiler": {
+      "venues": [
+        {
+          "name": "Kettner Edelmetalle Sportpark",
+          "address": "An der Gierhalde 1a, 78052 Villingen-Schwenningen",
+          "aliases": ["Kettner Edelmetalle Sportpark (RS)", "Kettner Edelmetalle Sportpark", "Rasenplatz, Kettner Edelmetalle Sportpark (RS)"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE"
+        }
+      ]
+    },
+    "SV Deggenhausertal": {
+      "venues": [
+        {
+          "name": "HSM Stadion",
+          "address": "Am Sportplatz 1, 88693 Deggenhausertal-Obersiggingen",
+          "aliases": ["HSM Stadion", "SVD HSM Stadion", "Rasenplatz, HSM Stadion"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE / Vereinsdaten"
+        }
+      ]
+    },
+    "SV Aasen": {
+      "venues": [
+        {
+          "name": "Sportplatz Aasen",
+          "address": "Obere Wiesen, 78166 Donaueschingen-Aasen",
+          "aliases": ["Sportplatz Aasen", "Rasenplatz, Sportplatz Aasen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE / SBFV"
+        }
+      ]
+    },
+    "TSV Aach-Linz": {
+      "venues": [
+        {
+          "name": "SF-Arena Aach-Linz",
+          "address": "Sahlenbacher Str. 15, 88630 Pfullendorf-Aach-Linz",
+          "aliases": ["SF-Arena Aach-Linz", "Rasenplatz, SF-Arena Aach-Linz"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE / Stadt Pfullendorf"
+        }
+      ]
+    },
+    "FV Möhringen": {
+      "venues": [
+        {
+          "name": "Sportplatz Möhringen Kunstrasen",
+          "address": "Battaglia Str. 22, 78532 Tuttlingen-Möhringen",
+          "aliases": ["Sportplatz Möhringen Kunstrasen", "Sportplatz Möhringen", "Kunstrasenplatz, Sportplatz Möhringen Kunstrasen"],
+          "latitude": null,
+          "longitude": null,
+          "source": "FUSSBALL.DE / FV Möhringen"
+        }
+      ]
+    }
+  }
+}
