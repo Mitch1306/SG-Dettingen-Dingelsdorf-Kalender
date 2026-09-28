@@ -6,17 +6,8 @@ METHOD:PUBLISH
 X-WR-CALNAME:SG Dettingen-Dingelsdorf
 X-WR-TIMEZONE:Europe/Berlin
 BEGIN:VEVENT
-UID:sgdd-330014056@github.com
-DTSTAMP:20260927T141315Z
-DTSTART;TZID=Europe/Berlin:20260927T153000
-DTEND;TZID=Europe/Berlin:20260927T173000
-SUMMARY:FC Pfaffenweiler – SG Dettingen-Dingelsdorf
-LOCATION:An der Gierhalde 1a\, 78052 Villingen-Schwenningen
-DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: Kettner Edelmetalle Sportpark\nApple Maps: https://maps.apple.com/?address=An%20der%20Gierhalde%201a%2C%2078052%20Villingen-Schwenningen\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/fc-pfaffenweiler-sg-dettingen-dingelsdorf/-/spiel/031EQQASRK000000VS5489BTVUS470OH
-END:VEVENT
-BEGIN:VEVENT
 UID:sgdd-330014063@github.com
-DTSTAMP:20260927T141315Z
+DTSTAMP:20260928T101709Z
 DTSTART;TZID=Europe/Berlin:20261003T153000
 DTEND;TZID=Europe/Berlin:20261003T173000
 SUMMARY:SG Dettingen-Dingelsdorf – FV Möhringen
@@ -25,7 +16,7 @@ DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: k-tech-Arena Dettingen
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014067@github.com
-DTSTAMP:20260927T141315Z
+DTSTAMP:20260928T101709Z
 DTSTART;TZID=Europe/Berlin:20261010T153000
 DTEND;TZID=Europe/Berlin:20261010T173000
 SUMMARY:VfR Stockach 09 – SG Dettingen-Dingelsdorf
@@ -36,7 +27,7 @@ DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: Osterholz-Stadion Stoc
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014079@github.com
-DTSTAMP:20260927T141315Z
+DTSTAMP:20260928T101709Z
 DTSTART;TZID=Europe/Berlin:20261017T153000
 DTEND;TZID=Europe/Berlin:20261017T173000
 SUMMARY:SG Dettingen-Dingelsdorf – FC 03 Radolfzell
@@ -45,7 +36,7 @@ DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: k-tech-Arena Dettingen
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014085@github.com
-DTSTAMP:20260927T141315Z
+DTSTAMP:20260928T101709Z
 DTSTART;TZID=Europe/Berlin:20261024T153000
 DTEND;TZID=Europe/Berlin:20261024T173000
 SUMMARY:Hegauer FV – SG Dettingen-Dingelsdorf
@@ -54,7 +45,7 @@ DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: Stadion Welschingen\nA
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014095@github.com
-DTSTAMP:20260927T141315Z
+DTSTAMP:20260928T101709Z
 DTSTART;TZID=Europe/Berlin:20261031T143000
 DTEND;TZID=Europe/Berlin:20261031T163000
 SUMMARY:SG Dettingen-Dingelsdorf – ESV Südstern Singen
@@ -63,7 +54,7 @@ DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: k-tech-Arena Dettingen
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014097@github.com
-DTSTAMP:20260927T141315Z
+DTSTAMP:20260928T101709Z
 DTSTART;TZID=Europe/Berlin:20261108T150000
 DTEND;TZID=Europe/Berlin:20261108T170000
 SUMMARY:FC 08 Villingen 2 – SG Dettingen-Dingelsdorf
@@ -72,7 +63,7 @@ DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: Im Friedengrund Kunstr
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014112@github.com
-DTSTAMP:20260927T141315Z
+DTSTAMP:20260928T101709Z
 DTSTART;TZID=Europe/Berlin:20261115T143000
 DTEND;TZID=Europe/Berlin:20261115T163000
 SUMMARY:SpVgg F.A.L. – SG Dettingen-Dingelsdorf
@@ -81,7 +72,7 @@ DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: HSM-Sportzentrum Frick
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014119@github.com
-DTSTAMP:20260927T141315Z
+DTSTAMP:20260928T101709Z
 DTSTART;TZID=Europe/Berlin:20261121T143000
 DTEND;TZID=Europe/Berlin:20261121T163000
 SUMMARY:SG Dettingen-Dingelsdorf – TSV Aach-Linz
@@ -90,11 +81,20 @@ DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: k-tech-Arena Dettingen
 END:VEVENT
 BEGIN:VEVENT
 UID:sgdd-330014122@github.com
-DTSTAMP:20260927T141315Z
+DTSTAMP:20260928T101709Z
 DTSTART;TZID=Europe/Berlin:20261128T143000
 DTEND;TZID=Europe/Berlin:20261128T163000
 SUMMARY:SG Dettingen-Dingelsdorf – FC Gutmadingen
 LOCATION:Allensbacher Str. 43\, 78465 Konstanz
 DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: k-tech-Arena Dettingen\nApple Maps: https://maps.apple.com/?address=Allensbacher%20Str.%2043%2C%2078465%20Konstanz\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/sg-dettingen-dingelsdorf-fc-gutmadingen/-/spiel/031EQQB03G000000VS5489BTVUS470OH
+END:VEVENT
+BEGIN:VEVENT
+UID:sgdd-330014135@github.com
+DTSTAMP:20260928T101709Z
+DTSTART;TZID=Europe/Berlin:20261205T143000
+DTEND;TZID=Europe/Berlin:20261205T163000
+SUMMARY:SC Gottmadingen-Biet. – SG Dettingen-Dingelsdorf
+LOCATION:Zum Katzental 3\, 78244 Gottmadingen
+DESCRIPTION:Landesliga Südbaden Staffel 3\nSpielstätte: Sportplatz Katzental Gottmadingen\nApple Maps: https://maps.apple.com/?address=Zum%20Katzental%203%2C%2078244%20Gottmadingen\nSpiel bei FUSSBALL.DE: https://www.fussball.de/spiel/sc-gottmadingen-biet-sg-dettingen-dingelsdorf/-/spiel/031EQQB0QS000000VS5489BTVUS470OH
 END:VEVENT
 END:VCALENDAR
